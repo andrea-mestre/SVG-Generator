@@ -87,10 +87,10 @@ console.log('Locale in generator:', locale);
 			const svgOutput = document.getElementById("svg-output")?.textContent;
 			console.log("Saving SVG: ", JSON.stringify(svgOutput));
 			
-			const params: Collection.Svg = {
-				nom: name,
-				code_svg: svgOutput || "<svg></svg>",
-				chat_history: JSON.stringify(promptList),
+			const params = {
+				name: name,
+				code: svgOutput || "<svg></svg>",
+				prompt: JSON.stringify(promptList),
 			};
 			await saveSVG(params);
 		});

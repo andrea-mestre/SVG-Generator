@@ -11,7 +11,7 @@ export enum Collections {
 	Mfas = "_mfas",
 	Otps = "_otps",
 	Superusers = "_superusers",
-	Svg = "svg",
+	Svgs = "svgs",
 	Users = "users",
 }
 
@@ -91,12 +91,13 @@ export type SuperusersRecord = {
 	verified?: boolean
 }
 
-export type SvgRecord<Tchat_history = unknown> = {
-	chat_history?: null | Tchat_history
-	code_svg?: HTMLString
+export type SvgsRecord = {
+	code?: HTMLString
 	created?: IsoDateString
+	date?: IsoDateString
 	id: string
-	nom?: string
+	name?: string
+	prompt?: string
 	updated?: IsoDateString
 }
 
@@ -119,7 +120,7 @@ export type ExternalauthsResponse<Texpand = unknown> = Required<ExternalauthsRec
 export type MfasResponse<Texpand = unknown> = Required<MfasRecord> & BaseSystemFields<Texpand>
 export type OtpsResponse<Texpand = unknown> = Required<OtpsRecord> & BaseSystemFields<Texpand>
 export type SuperusersResponse<Texpand = unknown> = Required<SuperusersRecord> & AuthSystemFields<Texpand>
-export type SvgResponse<Tchat_history = unknown, Texpand = unknown> = Required<SvgRecord<Tchat_history>> & BaseSystemFields<Texpand>
+export type SvgsResponse<Texpand = unknown> = Required<SvgsRecord> & BaseSystemFields<Texpand>
 export type UsersResponse<Texpand = unknown> = Required<UsersRecord> & AuthSystemFields<Texpand>
 
 // Types containing all Records and Responses, useful for creating typing helper functions
@@ -130,7 +131,7 @@ export type CollectionRecords = {
 	_mfas: MfasRecord
 	_otps: OtpsRecord
 	_superusers: SuperusersRecord
-	svg: SvgRecord
+	svgs: SvgsRecord
 	users: UsersRecord
 }
 
@@ -140,7 +141,7 @@ export type CollectionResponses = {
 	_mfas: MfasResponse
 	_otps: OtpsResponse
 	_superusers: SuperusersResponse
-	svg: SvgResponse
+	svgs: SvgsResponse
 	users: UsersResponse
 }
 
@@ -153,6 +154,6 @@ export type TypedPocketBase = PocketBase & {
 	collection(idOrName: '_mfas'): RecordService<MfasResponse>
 	collection(idOrName: '_otps'): RecordService<OtpsResponse>
 	collection(idOrName: '_superusers'): RecordService<SuperusersResponse>
-	collection(idOrName: 'svg'): RecordService<SvgResponse>
+	collection(idOrName: 'svgs'): RecordService<SvgsResponse>
 	collection(idOrName: 'users'): RecordService<UsersResponse>
 }

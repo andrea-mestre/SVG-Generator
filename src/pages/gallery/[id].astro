@@ -1,16 +1,16 @@
 ---
 import Layout from "@src/layouts/Layout.astro";
 import pb from "@src/utils/pb";
-import { Collections, type SvgRecord } from "@src/utils/pocketbase-types";
+import { Collections, type SvgsRecord } from "@src/utils/pocketbase-types";
 
 const id = Astro.params.id;
 if (!id) {
     throw new Error("SVG id parameter is missing.");
 }
 
-let svg: SvgRecord | null = null;
+let svg: SvgsRecord | null = null;
 try {
-    svg = await pb.collection(Collections.Svg).getOne(id);
+    svg = await pb.collection(Collections.Svgs).getOne(id);
 } catch (error) {
     console.error("Failed to fetch SVG:", error);
     Astro.redirect("/gallery");
@@ -62,12 +62,12 @@ try {
 // }
 ---
 
-<Layout title={svg ? svg.nom : "SVG Details"}>
+<Layout title={svg ? svg.name : "SVG Details"}>
     <div class="flex w-full h-full">
         <div
             id="svg-preview"
             class="card bg-base-300 rounded-box grid h-full w-3/4 grow place-items-center"
-            set:html={svg?.code_svg}
+            set:html={svg?.code}
         />
         <div class="divider divider-horizontal"></div>
         <div
@@ -81,26 +81,17 @@ try {
                 class="flex flex-col gap-4 w-full mb-20 overflow-y-auto flex-grow"
             >
                 {
-                    Array.isArray(svg?.chat_history) &&
-                    svg.chat_history.length > 0 ? (
-                        svg.chat_history.map(
-                            (msg: { role: unknown; content: unknown }) => (
-                                <div
-                                    class={`chat ${msg.role === "user" ? "chat-start" : "chat-end"}`}
-                                >
-                                    <div
-                                        class={`chat-bubble ${msg.role === "user" ? "bg-primary text-primary-content" : "bg-secondary text-secondary-content"}`}
-                                    >
-                                        <pre>${msg.content}</pre>
-                                    </div>
-                                    <div class="chat-footer opacity-60 text-xs mt-1">
-                                        {msg.role}
-                                    </div>
-                                </div>
-                            ),
-                        )
+                    svg?.prompt ? (
+                        <div class="chat chat-start">
+                            <div class="chat-bubble bg-primary text-primary-content">
+                                <pre>{svg.prompt}</pre>
+                            </div>
+                            <div class="chat-footer opacity-60 text-xs mt-1">
+                                user
+                            </div>
+                        </div>
                     ) : (
-                        <span class="text-error">No chat history.</span>
+                        <span class="text-error">No prompt saved.</span>
                     )
                 }
             </div>
@@ -113,7 +104,7 @@ try {
                 <input
                     type="hidden"
                     name="history"
-                    value={JSON.stringify(svg?.chat_history)}
+                    value={svg?.prompt || ""}
                 />
                 <input type="hidden" name="id" value={svg?.id} />
                 <div class="flex items-center gap-2">
@@ -196,8 +187,8 @@ try {
         scrollToBottom();
         const response = await update({
             id: formData.get("id"),
-            code_svg: aiResponse.content,
-            chat_history: JSON.stringify(history),
+            code: aiResponse.content,
+            prompt: JSON.stringify(history),
         });
         const data = await response.json();
 
