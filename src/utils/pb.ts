@@ -5,7 +5,7 @@ var path='';
 if (import.meta.env.MODE === 'development') {
     path = 'http://127.0.0.1:8083';
 } else {
-    path = 'http://127.0.0.1:8090'; 
+    path = 'http://eval.andrea-mestre.eu:8090'; 
 }
 const pb = new PocketBase(path) as TypedPocketBase;
 export default pb;
